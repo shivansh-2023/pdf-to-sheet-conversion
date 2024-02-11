@@ -1,0 +1,25 @@
+import tabula
+import pandas as pd
+from pathlib import Path
+
+# Define the PDF and Excel file paths
+pdf_file_path = [
+    Path("/content/a1.pdf"),
+    Path("/content/a2.pdf"),
+    Path("/content/a3.pdf"),
+    Path("/content/a4.pdf"),
+    Path("/content/a5.pdf")
+]
+
+excel_file_path = Path("/content/git.xlsx")
+
+# Read the PDF and extract tables
+for pdf_file in pdf_file_path:
+  tables = tabula.read_pdf(pdf_file, pages='all')
+
+# Write the extracted tables to an Excel file
+with pd.ExcelWriter(excel_file_path) as writer:
+    for i, table in enumerate(tables):
+        table.to_excel(writer, sheet_name=f"Sheet_{i+1}", index=False)
+
+print("PDF converted to Excel successfully!")
